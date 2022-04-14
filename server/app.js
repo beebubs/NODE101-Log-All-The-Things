@@ -37,20 +37,9 @@ app.use(morgan('custom', {
 }));
 
 
-
-// app.use((req, res, next) => {
-//     //write your logging code here
-//     // fs.appendFile('log.csv', data, err => {
-//     //     if (err) throw err 
-//     //     console.log(err);
-        
-//     // });
-
-// });
-
-
 app.get('/', (req, res) => {
 // write your code to respond "ok" here
+    console.log(`${req.headers['user-agent'].replace(',','')},${new Date().toISOString()},${req.method},${req.url},HTTP/${req.httpVersion},${res.statusCode}`)
     res.status(200).send("ok");
 });
 
