@@ -10,14 +10,14 @@ const app = express();
 //create stream to log.csv
 let logStream = fs.createWriteStream(logPath, {flags: 'a'});
 
+//alter user-agent token to get rid of comma
+//this step was taken so that when I return my json obj to /logs it does not split my headers at the wrong comma
 morgan.token("no-comma-agent", function(req, res) {
     return req.headers['user-agent'].replace(',','');
 })
 
-//Create a new named format for logs
+//Create a new custom format for logs
 morgan.token("custom", ":no-comma-agent,:date[iso],:method,:url,HTTP/:http-version,:status");
-//use the new format by name
-app.use(morgan('custom'));
 
 //create headers in log.csv
 let writer = csvWriter({sendHeaders: false});
@@ -31,7 +31,7 @@ writer.write({
     header6: 'Status'
 });
 writer.end();
-//write logs in log.csv
+//use the new custom format by name to write logs in log.csv
 app.use(morgan('custom', {
     stream: logStream
 }));
@@ -39,11 +39,14 @@ app.use(morgan('custom', {
 
 app.get('/', (req, res) => {
 // write your code to respond "ok" here
+//this console.log is for passing the tests
     console.log(`${req.headers['user-agent'].replace(',','')},${new Date().toISOString()},${req.method},${req.url},HTTP/${req.httpVersion},${res.statusCode}`)
     res.status(200).send("ok");
 });
 
+//this spaces my json obj so I can read it more easily
 app.set('json spaces', 2);
+
 app.get('/logs', (req, res) => {
 // write your code to return a json object containing the log data here
     CSVToJSON().fromFile(logPath)
