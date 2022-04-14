@@ -6,6 +6,6 @@ Exit criteria:
 1. Every request to your server must be logged to the console
 2. Every request to your server must be logged to a file
 3. The log file is named log.csv and must be csv format
-4. Must use fs.appendFile, do not use fs.appendFileSync
+4. Do not use fs.appendFileSync
 5. Expose an endpoint (does not require authentication) http://localhost:3000/logs that will return a json object with all the logs
 6. All tests must pass
